@@ -17,6 +17,7 @@ import bcrypt from "bcrypt"
         trim: true,
     },
     fullName: {
+        type: String,
         required :true,
         unique: true,
         trim: true,
