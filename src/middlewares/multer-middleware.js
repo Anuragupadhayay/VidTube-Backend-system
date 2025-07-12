@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const rawString = file.fieldname + '-' + Date.now()
-    const uniqueSuffix = crypto.createHash('md5').update(rawstring).digest('hex')
+    const uniqueSuffix = crypto.createHash('md5').update(rawString).digest('hex')
     cb(null, file.fieldname + '-' + uniqueSuffix)
   }
 })
