@@ -1,7 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { User } from "../models/user.models.js";
-// import { UploadOnCloudinary } from "cloudinary";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 
@@ -54,7 +53,8 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(500, "Failed to upload cover image")
     }
 
-    const user = await User.create({
+    try {
+        const user = await User.create({
         fullname,
         avatar: avatarLocalPath,
         coverImage: coverLocalPath || "",
@@ -75,6 +75,16 @@ const registerUser = asyncHandler( async (req, res) => {
     return res
       .status(201)
       .json(new ApiResponse(200, createdUser, "User registered successfully"))
+    } catch (error) {
+        console.log("User creation failed");
+    }
+    if(avatar){
+        await deleteFromCloudinary(avatar.public_id)
+    }
+    if(coverImage){
+        await deleteFromCloudinary(coverImage.public_id)
+        throw new ApiError(500, "Something went wrong while registering a user and images are deleted");        
+    }
 })
 
 export { registerUser }
