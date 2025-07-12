@@ -16,7 +16,7 @@ import bcrypt from "bcrypt"
         lowercase: true,
         trim: true,
     },
-    fullName: {
+    fullname: {
         type: String,
         required :true,
         unique: true,
@@ -49,8 +49,7 @@ import bcrypt from "bcrypt"
 
 
 userSchema.pre("save", async function(next){
-    
-    if(!this.modified("password")) return next()
+    if(!this.isModified("password")) return next()
     
     this.password = bcrypt.hash(this.password, 10)
 
@@ -82,6 +81,15 @@ userSchema.methods.generateRefreshToken = function () {
 )
 }
 
-
+const deleteFromCloudinary = async (publicId) => {
+    try {
+        const result = await uploadOnCloudinary.uploader.destroy(publicId)
+        console.log("Deleted from cloudinary. PublicId");
+        
+    } catch (error) {
+        console.log("Error deleting from cloudinary");
+        return null
+    }
+}
 
 export const User = mongoose.model("User", userSchema)
