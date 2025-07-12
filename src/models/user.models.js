@@ -81,7 +81,7 @@ userSchema.methods.generateRefreshToken = function () {
 )
 }
 
-const deleteFromCloudinary = async (publicId) => {
+userSchema.methods.deleteFromCloudinary = async function (publicId)  {
     try {
         const result = await uploadOnCloudinary.uploader.destroy(publicId)
         console.log("Deleted from cloudinary. PublicId");
